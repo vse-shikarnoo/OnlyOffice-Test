@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -33,6 +34,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import kv.test.office.R
 import kv.test.office.ui.theme.OfficeTheme
 
@@ -40,7 +43,8 @@ import kv.test.office.ui.theme.OfficeTheme
 @Composable
 fun AuthScreen(
     modifier: Modifier = Modifier,
-    viewModel: AuthViewModel = AuthViewModel()
+    viewModel: AuthViewModel = viewModel(),
+    onNavigate: () -> Unit
 ) {
 
     var portal by rememberSaveable {
@@ -52,8 +56,10 @@ fun AuthScreen(
     var password by rememberSaveable {
         mutableStateOf("Testpass123")
     }
-    val isError = viewModel.errorState.value
-    val isLoading = viewModel.loadingState.value
+
+    if(viewModel.authState.value){
+        onNavigate()
+    }
 
 
 
@@ -76,7 +82,7 @@ fun AuthScreen(
             onValueChanged = {
                 portal = it
             },
-            isEnabled = !isLoading
+            isEnabled = !viewModel.loadingState.value
         )
         EditTextCompose(
             placeholder = R.string.placeholder_email,
@@ -85,7 +91,7 @@ fun AuthScreen(
             onValueChanged = {
                 email = it
             },
-            isEnabled = !isLoading
+            isEnabled = !viewModel.loadingState.value
         )
         EditTextCompose(
             placeholder = R.string.placeholder_password,
@@ -94,19 +100,18 @@ fun AuthScreen(
             onValueChanged = {
                 password = it
             },
-            isEnabled = !isLoading
+            isEnabled = !viewModel.loadingState.value
         )
         ButtonProgress(
-            isEnabled = !isLoading,
-            isLoading = isLoading,
-            modifier = Modifier.padding(horizontal = 80.dp),
+            isEnabled = !viewModel.loadingState.value,
+            isLoading = viewModel.loadingState.value,
+            isError = viewModel.errorState.value,
+            modifier = Modifier
+                .padding(horizontal = 80.dp)
+                .padding(top = 16.dp),
             onClick = {
                 viewModel.authenticate(portal, email, password)
-                viewModel.loadingState.value= true
             })
-        if (isError){
-            ErrorCompose()
-        }
     }
 }
 
@@ -135,7 +140,7 @@ fun EditTextCompose(
             focusedContainerColor = MaterialTheme.colorScheme.primaryContainer
         ),
         placeholder = {
-            Text(stringResource(placeholder))
+            Text(stringResource(placeholder), color = MaterialTheme.colorScheme.onPrimaryContainer)
         },
         modifier = modifier
             .fillMaxWidth()
@@ -168,15 +173,42 @@ fun ErrorCompose(
 fun ButtonProgress(
     isEnabled: Boolean,
     isLoading: Boolean,
+    isError: Boolean,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
 
-    Button(onClick = {
-        onClick()
-    }, modifier.fillMaxWidth(), enabled = isEnabled) {
+    val text = if (isError) {
+        stringResource(R.string.placeholder_error)
+    } else {
+        stringResource(R.string.placeholder_login)
+    }
+
+    val colors = if (isError) {
+        ButtonColors(
+            containerColor = MaterialTheme.colorScheme.errorContainer,
+            contentColor = MaterialTheme.colorScheme.onErrorContainer,
+            disabledContainerColor = MaterialTheme.colorScheme.errorContainer,
+            disabledContentColor = MaterialTheme.colorScheme.onErrorContainer
+        )
+    } else {
+        ButtonColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
+            disabledContainerColor = MaterialTheme.colorScheme.primary,
+            disabledContentColor = MaterialTheme.colorScheme.onPrimary
+        )
+    }
+
+    Button(
+        onClick = {
+            onClick()
+        }, modifier.fillMaxWidth(),
+        enabled = isEnabled,
+        colors = colors
+    ) {
         if (!isLoading) {
-            Text(stringResource(R.string.placeholder_login))
+            Text(text)
         } else {
             CircularProgressIndicator(
                 color = MaterialTheme.colorScheme.secondary,
@@ -198,7 +230,8 @@ fun AuthScreenPreview() {
             AuthScreen(
                 Modifier
                     .padding(horizontal = 16.dp)
-                    .padding(top = 64.dp, bottom = 16.dp)
+                    .padding(top = 64.dp, bottom = 16.dp),
+                onNavigate = {}
             )
         }
     }
@@ -214,7 +247,8 @@ fun DarkAuthScreenPreview() {
             AuthScreen(
                 Modifier
                     .padding(horizontal = 16.dp)
-                    .padding(top = 64.dp, bottom = 16.dp)
+                    .padding(top = 64.dp, bottom = 16.dp),
+                onNavigate = {}
             )
         }
     }
@@ -250,7 +284,7 @@ fun ErrorComposePreview() {
 fun ProgressComposePreview() {
     OfficeTheme {
         ButtonProgress(
-            true, isLoading = false, Modifier.padding(8.dp), {}
+            true, isLoading = false, isError = false, Modifier.padding(8.dp), {}
         )
     }
 }
