@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("org.jetbrains.kotlin.kapt")
     alias(libs.plugins.compose.compiler)
+    kotlin("plugin.serialization") version "1.7.0"
 }
 
 android {
@@ -76,6 +77,10 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.logging.interceptor)
+    implementation(libs.kotlinx.serialization.json)
+    implementation (libs.retrofit)
+    implementation (libs.logging.interceptor)
+    implementation (libs.converter.gson)
 
     // DI
     implementation(libs.hilt.android)

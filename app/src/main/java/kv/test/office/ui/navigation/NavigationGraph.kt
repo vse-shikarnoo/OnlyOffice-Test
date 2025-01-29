@@ -1,13 +1,12 @@
 package kv.test.office.ui.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import kv.test.office.ui.AuthScreen
-import kv.test.office.ui.DocsScreen
-import kv.test.office.ui.ProfileScreen
+import kv.test.office.ui.auth.AuthScreen
+import kv.test.office.ui.docs.DocsScreen
+import kv.test.office.ui.profile.ProfileScreen
 
 @Composable
 fun NavigationGraph(
@@ -27,7 +26,11 @@ fun NavigationGraph(
         }
         composable(BottomNavigationItems.ProfileScreen.route) {
             onBottomBarVisibilityChanged(true)
-            ProfileScreen()
+            ProfileScreen(
+                onNavigate = {
+                    navController.navigate(Routes.Auth.route)
+                }
+            )
         }
     }
 }

@@ -1,4 +1,4 @@
-package kv.test.office.ui
+package kv.test.office.ui.auth
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kv.test.office.data.model.AuthResponse
 import kv.test.office.data.repository.OnlyOfficeRepository
 
 
@@ -24,16 +23,20 @@ class AuthViewModel: ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 loadingState.value = true
+                errorState.value = false
+
                 Log.i(TAG, "authenticate: try auth")
                 delay(2000)
+
                 repository.authenticate(portal,email, password)
                 authState.value = true
-                errorState.value = false
             }catch (t:Throwable){
                 Log.e(TAG, "authenticate: error", t)
+
                 errorState.value = true
             }finally {
                 Log.i(TAG, "authenticate: finally")
+
                 loadingState.value = false
             }
         }
