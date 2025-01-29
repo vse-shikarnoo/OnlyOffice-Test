@@ -51,8 +51,9 @@ class DocsViewModel : ViewModel() {
             try {
                 Log.i(TAG, "getFiles: try")
                 docsState.value = repository.getFiles(folderId)
-
-                rootId.value = docsState.value.current.id
+                
+                currentFolderId.value = docsState.value.current.id
+                isRoot.value = currentFolderId.value == rootId.value
 
             } catch (t: Throwable) {
                 Log.e(TAG, "getFiles: error", t)

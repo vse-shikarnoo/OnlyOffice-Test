@@ -1,8 +1,6 @@
 package kv.test.office.ui.docs
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
@@ -12,6 +10,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Menu
@@ -26,11 +25,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import kv.test.office.R
 import kv.test.office.data.model.FileInfo
-import kv.test.office.data.model.FilesInfo
 import kv.test.office.data.model.FolderInfo
-import kv.test.office.ui.auth.AuthScreen
 import kv.test.office.ui.theme.OfficeTheme
 
 @Composable
@@ -42,6 +38,15 @@ fun DocsScreen(
             .fillMaxSize()
             .wrapContentSize(Alignment.Center)
     ) {
+        if (!viewModel.isRoot.value) {
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = null,
+                modifier = Modifier.clickable {
+                    viewModel.getFiles(viewModel.docsState.value.current.parentId)
+                }
+            )
+        }
         Text(
             text = "Docs"
         )
