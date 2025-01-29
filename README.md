@@ -1,5 +1,5 @@
 # OnlyOffice-Test
-![alt text]([https://github.com/[username]/[reponame]/blob/[branch]/image.jpg](https://github.com/vse-shikarnoo/OnlyOffice-Test/blob/main/photo_2025-01-27_14-27-41.jpg)?raw=true)
+![screenshot](photo_2025-01-27_14-27-41.jpg)
 #
 На основе публичного API доступного по адресу api.onlyoffice.com реализовать прототип приложение для платформы Android. Тестовый портал можно создать на сайте onlyoffice.com. 
 Экран подключения к порталу
