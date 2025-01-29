@@ -57,7 +57,7 @@ fun AuthScreen(
         mutableStateOf("Testpass123")
     }
 
-    if(viewModel.authState.value){
+    if (viewModel.authState.value) {
         onNavigate()
     }
 
@@ -105,6 +105,7 @@ fun AuthScreen(
             isEnabled = !viewModel.loadingState.value
         )
         ButtonProgress(
+            text = R.string.placeholder_login,
             isEnabled = !viewModel.loadingState.value,
             isLoading = viewModel.loadingState.value,
             isError = viewModel.errorState.value,
@@ -138,8 +139,8 @@ fun EditTextCompose(
             )
         },
         colors = TextFieldDefaults.colors(
-            unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-            focusedContainerColor = MaterialTheme.colorScheme.primaryContainer
+            unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+            focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer
         ),
         placeholder = {
             Text(stringResource(placeholder), color = MaterialTheme.colorScheme.onPrimaryContainer)
@@ -173,6 +174,7 @@ fun ErrorCompose(
 
 @Composable
 fun ButtonProgress(
+    @StringRes text: Int,
     isEnabled: Boolean,
     isLoading: Boolean,
     isError: Boolean,
@@ -180,10 +182,10 @@ fun ButtonProgress(
     onClick: () -> Unit
 ) {
 
-    val text = if (isError) {
+    val _text = if (isError) {
         stringResource(R.string.placeholder_error)
     } else {
-        stringResource(R.string.placeholder_login)
+        stringResource(text)
     }
 
     val colors = if (isError) {
@@ -210,11 +212,11 @@ fun ButtonProgress(
         colors = colors
     ) {
         if (!isLoading) {
-            Text(text)
+            Text(_text)
         } else {
             CircularProgressIndicator(
-                color = MaterialTheme.colorScheme.secondary,
-                trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                color = MaterialTheme.colorScheme.tertiaryContainer,
+                trackColor = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier.size(24.dp)
             )
         }
@@ -241,12 +243,8 @@ fun AuthScreenPreview() {
 fun DarkAuthScreenPreview() {
     OfficeTheme(
         darkTheme = true
-    ) {
-        Surface(color = MaterialTheme.colorScheme.background) {
-            AuthScreen(
-                onNavigate = {}
-            )
-        }
+    ){
+        AuthScreen {  }
     }
 }
 
@@ -280,8 +278,12 @@ fun ErrorComposePreview() {
 fun ProgressComposePreview() {
     OfficeTheme {
         ButtonProgress(
-            true, isLoading = false, isError = false, Modifier.padding(8.dp), {}
-        )
+            R.string.placeholder_login,
+            true,
+            isLoading = false,
+            isError = false,
+            Modifier.padding(8.dp)
+        ) {}
     }
 }
 

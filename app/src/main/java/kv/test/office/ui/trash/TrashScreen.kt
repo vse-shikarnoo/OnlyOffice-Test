@@ -1,4 +1,4 @@
-package kv.test.office.ui.docs
+package kv.test.office.ui.trash
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -44,8 +44,8 @@ import kv.test.office.data.model.FolderInfo
 import kv.test.office.ui.theme.OfficeTheme
 
 @Composable
-fun DocsScreen(
-    viewModel: DocsViewModel = viewModel()
+fun TrashScreen(
+    viewModel: TrashViewModel = viewModel()
 ) {
 
     Column(
@@ -53,7 +53,6 @@ fun DocsScreen(
             .fillMaxSize()
             .padding(horizontal = 16.dp)
     ) {
-
         if (viewModel.loadingState.value) {
             CircularProgressIndicator(
                 modifier = Modifier
@@ -79,7 +78,6 @@ fun DocsScreen(
                     Text(stringResource(R.string.placeholder_retry))
                 }
             } else {
-
                 if (!viewModel.isRoot.value) {
                     Spacer(Modifier.weight(0.5f))
                     Icon(
@@ -95,13 +93,10 @@ fun DocsScreen(
                     Spacer(Modifier.weight(1f))
                 }
                 Text(
-                    text = stringResource(R.string.title_documents),
+                    text = stringResource(R.string.title_trash),
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.weight(1f)
                 )
-
-
-
                 LazyColumn(
                     modifier = Modifier.weight(5f),
 
@@ -192,10 +187,10 @@ fun ColumnItem(
 
 @Preview(widthDp = 360, heightDp = 640)
 @Composable
-fun DocsScreenPreview() {
+fun TrashScreenPreview() {
     OfficeTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
-            DocsScreen(
+            TrashScreen(
             )
         }
     }

@@ -1,6 +1,5 @@
-package kv.test.office.ui.docs
+package kv.test.office.ui.trash
 
-import android.util.Log
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -8,14 +7,12 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kv.test.office.data.model.FilesInfo
-import kv.test.office.data.repository.DocumentsRepository
+import kv.test.office.data.repository.TrashRepository
 
 
-private const val TAG = "Docs ViewModel Logs"
+class TrashViewModel : ViewModel() {
 
-class DocsViewModel : ViewModel() {
-
-    private val repository = DocumentsRepository()
+    private val repository = TrashRepository()
 
     val docsState = mutableStateOf(FilesInfo())
     val errorState = mutableStateOf(false)
@@ -35,17 +32,17 @@ class DocsViewModel : ViewModel() {
             try {
                 loadingState.value = true
                 errorState.value = false
-                docsState.value = repository.getMyDocuments()
+                docsState.value = repository.getTrash()
 
                 rootId.intValue = docsState.value.current.id
                 currentFolderId.intValue = docsState.value.current.id
             } catch (t: Throwable) {
-                //Log.e(TAG, "getStart: error", t)
                 errorState.value = true
                 docsState.value = FilesInfo()
+                //Log.e(TAG, "getStart: error", t)
             } finally {
-                //Log.i(TAG, "getStart: finally ")
-                loadingState.value=false
+                loadingState.value = false
+                //Log.i(TAG, "getStart: finally")
             }
         }
     }
@@ -54,9 +51,9 @@ class DocsViewModel : ViewModel() {
     fun getFiles(folderId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
+                //Log.i(TAG, "getFiles: try")
                 loadingState.value = true
                 errorState.value = false
-                Log.i(TAG, "getFiles: try")
                 docsState.value = repository.getFiles(folderId)
 
                 currentFolderId.intValue = docsState.value.current.id
@@ -64,10 +61,10 @@ class DocsViewModel : ViewModel() {
 
             } catch (t: Throwable) {
                 errorState.value = true
-                Log.e(TAG, "getFiles: error", t)
+                //Log.e(TAG, "getFiles: error", t)
             } finally {
                 loadingState.value = false
-                Log.i(TAG, "getFiles: finally")
+                //Log.i(TAG, "getFiles: finally")
             }
         }
     }

@@ -30,7 +30,6 @@ class MainActivity : ComponentActivity() {
                         if (buttonsVisible) {
                             BottomBar(
                                 navController = navController,
-                                state = buttonsVisible,
                                 modifier = Modifier
                             )
                         }
